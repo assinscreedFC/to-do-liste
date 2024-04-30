@@ -1,32 +1,49 @@
-const button=document.querySelector("button");
-button.addEventListener('click',()=>{
-let input=document.querySelector("input");
-const text=input.value;
-if(text===""){alert("Please enter a valid number!");}else{
-    const ul=document.querySelector("ul");
-    const li=document.createElement("li");
-    li.innerHTML=`${text}  <button id="${ul.childElementCount}">Supprimer</button>`;
-    li.id=ul.childElementCount;
-    //ul.innerHTML=`<li class="${ul.childElementCount}">Item 1 <button class="${ul.childElementCount}">Supprimer</button></li>`;
-    ul.appendChild(li);
-    input.value="";
-    console.log(ul.childNodes);
-   
-const buttonUl=document.querySelectorAll("ul button");
-            buttonUl.forEach( btn=>remove (btn));
+const modalContainer = document.querySelector(".modal-container");
+const modalTriggers = document.querySelectorAll(".modal-trigger");
+const titre = document.querySelector("#title");
+const description = document.querySelector("#description");
+const date = document.querySelector("#date");
+const radio = document.querySelectorAll(".rad");
+const section = document.querySelector(".grand-container");
+modalTriggers.forEach((trigger) =>
+  trigger.addEventListener("click", () => togglemodal())
+);
+
+function togglemodal() {
+  modalContainer.classList.toggle("active");
 }
-} );
-const ul=document.querySelector("ul");
-const buttonUl=document.querySelectorAll("ul button");
-            buttonUl.forEach( btn=>remove (btn));
-function remove(btn) {
-    console.log(btn);
-    btn.addEventListener("click", (e)=> {
-        let i = e.target.id;
-       let  li=document.getElementById(`${i}`);
-       
-       ul.removeChild(li);
-       
-       });
-    
-} ;
+
+class note {
+  constructor(titre, desc, dateg, rad) {
+    this.Titre = titre;
+    this.Description = desc;
+    this.date = dateg;
+    this.rad = rad;
+    this.clone = document
+      .querySelector("#modalTemplate")
+      .content.cloneNode(true);
+  }
+
+  setNote() {
+    const newClone = this.clone.cloneNode(true);
+    section.appendChild(newClone);
+    const neww = section.lastElementChild;
+    neww.querySelector(".para").innerHTML = this.Titre;
+    // neww.querySelector("#description").innerHTML = this.Description;
+    neww.querySelector(".date").value = this.date;
+    // neww.querySelector(".rad").innerHTML = this.rad;
+    console.log(neww);
+  }
+}
+
+const form = document.getElementById("form");
+const submit = document.getElementById("details");
+submit.addEventListener("submit", (e) => e.preventDefault());
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  // radio = radio.filter((r) => r.checked);
+  console.log(radio[0].value);
+  console.log(date.value);
+  anis = new note(titre.value, description.value, date.value, radio[0].checked);
+  anis.setNote();
+});

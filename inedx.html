@@ -12,6 +12,67 @@
     <title>to-do-liste</title>
   </head>
   <body>
+    <div class="modal-container">
+      <div class="overlay modal-trigger"></div>
+      <div
+        class="modal"
+        role="dialog"
+        aria-labelledby="modalTitle"
+        aria-describedby="dialogDesc"
+      >
+        <button aria-label="close modal" class="close-modal modal-trigger">
+          X
+        </button>
+        <form id="form">
+          <div class="prioriter">
+            <input
+              type="text"
+              placeholder="title"
+              id="title"
+              style="width: 100%; margin-bottom: 5px"
+            />
+            <textarea
+              name="desciption"
+              id="description"
+              cols="30"
+              rows="8"
+              style="resize: none"
+              placeholder="Description"
+            ></textarea>
+          </div>
+
+          <div>
+            <div>
+              <label for="date">date: </label>
+              <input type="date" id="date" name="date" />
+            </div>
+
+            <div class="mydict">
+              <div>
+                <p id="ip">importance :</p>
+                <label>
+                  <input type="radio" name="radio" checked="" class="rad" />
+                  <span>LOW</span>
+                </label>
+                <label>
+                  <input type="radio" name="radio" class="rad" />
+                  <span>MEDIUM</span>
+                </label>
+                <label>
+                  <input type="radio" name="radio" class="rad" />
+                  <span>HIGHT</span>
+                </label>
+              </div>
+            </div>
+            <div class="splite">
+              <button id="details">Add Note</button>
+            </div>
+          </div>
+          <!-- <label for="check">reed</label>
+        <input type="checkbox" name="check" id="check" /> -->
+        </form>
+      </div>
+    </div>
     <header>
       <h1>To-Do liste</h1>
     </header>
@@ -20,35 +81,42 @@
         <ul>
           <li><h3>Home</h3></li>
           <li><h3>Today</h3></li>
-          <li><h3>week</h3></li>
+          <li><h3>Week</h3></li>
           <li><h3>Project</h3></li>
           <li><h3>Note</h3></li>
         </ul>
-      </nav>
-      <div class="container">
-        <div class="ligne">
-          <div class="left">
-            <input type="color" />
-            <label class="material-checkbox">
-              <input type="checkbox" id="check" />
 
-            <p>
+        <div class="add">
+          <button id="details" class="addbtn addbook modal-btn modal-trigger">
+            ADD
+          </button>
+        </div>
+      </nav>
+      <div class="grand-container">
+        <div class="container">
+          <div class="ligne">
+            <div class="left">
+              <label class="containerr">
+                <input checked="checked" type="checkbox" />
+                <div class="checkmark"></div>
+              </label>
+            </div>
+            <p class="para">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              Excepturi ea, ipsa ad repellendus quisquam blanditiis rem ipsam,
-              ex provident numquam eaque perspiciatis maiores dicta quod.
-              Impedit maiores exercitationem ea nam?
             </p>
-          </div>
-          <div class="right">
-            <button id="details">details</button>
-            <input type="date" />
-            <button class="deledit">
-              <img src="./image/editer.svg" alt="" width="20px" />
-            </button>
-            <button class="deledit">
-              <img src="./image/poubelle.svg" alt="" width="20px" />
-            </button>
+            <div class="right">
+              <button id="details" class="addbook modal-btn modal-trigger">
+                details
+              </button>
+              <input type="date" id="dat" class="date" readonly />
+              <button class="deledit">
+                <img src="./image/editer.svg" alt="" width="15px" />
+              </button>
+              <button class="deledit">
+                <img src="./image/poubelle.svg" alt="" width="15px" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -62,7 +130,32 @@
       ><br />
     </div>
     <div class="container"><ul class="liste"></ul></div> -->
+    <template id="modalTemplate">
+      <div class="container">
+        <div class="ligne">
+          <div class="left">
+            <label class="containerr">
+              <input checked="checked" type="checkbox" />
+              <div class="checkmark"></div>
+            </label>
+          </div>
+          <p class="para"></p>
 
+          <div class="right">
+            <button id="details" class="addbook modal-btn modal-trigger">
+              details
+            </button>
+            <input type="date" id="dat" class="date" readonly />
+            <button class="deledit">
+              <img src="./image/editer.svg" alt="" width="15px" />
+            </button>
+            <button class="deledit">
+              <img src="./image/poubelle.svg" alt="" width="15px" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
     <footer class="footer">
       <p>
         Copyright ©
