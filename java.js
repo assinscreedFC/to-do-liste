@@ -35,6 +35,7 @@ class note {
     } else {
       couleur = "#FF0000";
     }
+    console.log(radio);
 
     neww.querySelector(".ligne").style.borderLeft = " 4px solid " + couleur;
     // neww.querySelector("#details").classList.add("addbook");
@@ -47,9 +48,75 @@ class note {
   }
 
   addbtn(neww) {
-    const btn = neww.querySelector(".modal-trigger");
+    const btn = neww.querySelector(".details");
+    console.log(btn);
+    btn.addEventListener("click", () => {
+      document.querySelector(
+        "body"
+      ).innerHTML += `<div class="modal-containe active">
+    <div class="overlay modal-trigge"></div>
+    <div
+      class="modal"
+      role="dialog"
+      aria-labelledby="modalTitle"
+      aria-describedby="dialogDesc"
+    >
+      <button aria-label="close modal" class="close-modal modal-trigge">
+        X
+      </button>
+      <form id="form">
+        <div class="prioriter">
+          <input
+            type="text"
+            placeholder="title"
+            id="title"
+            value="${this.Titre}"
+            style="width: 100%; margin-bottom: 5px"
+            readonly
+          />
+          <textarea
+            name="desciption"
+            id="description"
+            cols="50%"
+            rows="8"
+            value="${this.Description}"
+            style="resize: none"
+            placeholder="Description"
+            readonly
+          ></textarea>
+        </div>
 
-    btn.addEventListener("click", () => togglemodal());
+        <div>
+          <div>
+            <label for="date">date: </label>
+            <input type="date" id="date" name="date" value="${this.date}" readonly/>
+          </div>
+
+          <div class="mydict">
+            <div>
+              <p id="ip">importance :</p>
+              <label>
+                <input type="radio" name="radio" checked="" class="rad" readonly/>
+                <span>LOW</span>
+              </label>
+              <label>
+                <input type="radio" name="radio" class="rad" readonly/>
+                <span>MEDIUM</span>
+              </label>
+              <label>
+                <input type="radio" name="radio" class="rad" readonly />
+                <span>HIGHT</span>
+              </label>
+            </div>
+          </div>`;
+      const modalContaine = document.querySelector(".modal-containe");
+      const modalTrigger = document.querySelectorAll(".modal-trigge");
+      modalTrigger.forEach((trigger) =>
+        trigger.addEventListener("click", () =>
+          modalContaine.classList.toggle("active")
+        )
+      );
+    });
   }
 }
 

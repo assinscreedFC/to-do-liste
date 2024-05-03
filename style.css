@@ -332,7 +332,7 @@ label:last-child span {
 
 
 
-.modal-container{
+.modal-container,.modal-containe{
   z-index: 1111;
   visibility: hidden;
   position: fixed;
@@ -342,7 +342,8 @@ label:last-child span {
   transition: visibility 0.4s;
  
 }
-.modal-container.active{
+.modal-container.active,
+  .modal-containe.active{
   visibility: visible;
   transition: visibility 0s;
 
@@ -356,6 +357,10 @@ label:last-child span {
    transition: opacity 0.4s 0.2s ease-out;
 }
 .modal-container.active .overlay{
+  opacity: 1;
+  transition: opacity 0.4s ease-out;
+}
+.modal-containe.active .overlay{
   opacity: 1;
   transition: opacity 0.4s ease-out;
 }
@@ -381,6 +386,14 @@ label:last-child span {
 
 }
 .modal-container.active .modal{
+  opacity: 1;
+  transform: translate( -50%, -50% );
+  transition: opacity 0.4s 0.2s ease-out,
+  transform 0.4s 0.2s ease-out
+
+}
+
+.modal-containe.active .modal{
   opacity: 1;
   transform: translate( -50%, -50% );
   transition: opacity 0.4s 0.2s ease-out,
