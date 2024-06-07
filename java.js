@@ -209,7 +209,14 @@ class note {
     });
   }
 }
-
+function deletnote() {
+  const dellet = section.querySelectorAll(".deledit");
+  dellet.forEach((tri) => {
+    tri.addEventListener("click", (tri) => {
+      tri.parentNode.parentNode.parentNode.remove();
+    });
+  });
+}
 const form = document.getElementById("form");
 const submit = document.getElementById("add");
 submit.addEventListener("submit", (e) => e.preventDefault());
@@ -223,6 +230,8 @@ form.addEventListener("submit", (e) => {
   anis.push(new note(titre.value, description.value, date.value, radio));
   anis[anis.length - 1].setNote();
   actubtndetails();
+  deletnote();
+
   console.log(description.value);
   anis.forEach((note) => {
     console.log("Titre : " + note.Titre);
