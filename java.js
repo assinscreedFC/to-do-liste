@@ -46,44 +46,36 @@ class note {
     this.clone = document
       .querySelector("#modalTemplate")
       .content.cloneNode(true);
-    // this.btn;
   }
 
   get Titre() {
     return this._Titre;
   }
 
-  // Setter pour la propriété 'Titre'
   set Titre(newTitre) {
     this._Titre = newTitre;
   }
 
-  // Getter pour la propriété 'Description'
   get Description() {
     return this._Description;
   }
 
-  // Setter pour la propriété 'Description'
   set Description(newDesc) {
     this._Description = newDesc;
   }
 
-  // Getter pour la propriété 'date'
   get date() {
     return this._date;
   }
 
-  // Setter pour la propriété 'date'
   set date(newDate) {
     this._date = newDate;
   }
 
-  // Getter pour la propriété 'rad'
   get rad() {
     return this._rad;
   }
 
-  // Setter pour la propriété 'rad'
   set rad(newRad) {
     this._rad = newRad;
   }
@@ -93,7 +85,7 @@ class note {
     section.appendChild(newClone);
     const neww = section.lastElementChild;
     neww.querySelector(".para").innerHTML = this._Titre;
-    //neww.querySelector("#description").innerHTML = this.Description;
+
     neww.querySelector(".date").value = this._date;
     let couleur;
     if (radio[0].checked) {
@@ -106,13 +98,8 @@ class note {
     console.log(radio);
 
     neww.querySelector(".ligne").style.borderLeft = " 4px solid " + couleur;
-    // neww.querySelector("#details").classList.add("addbook");
-    // neww.querySelector("#details").classList.add("modal-btn");
-    // neww.querySelector("#details").classList.add("modal-trigger");
-    // neww.querySelector(".rad").innerHTML = this.rad;
+
     console.log(neww);
-    // this.btn = neww.querySelector(".details");
-    // this.addbtn();
   }
 
   addbtn(index) {
@@ -209,7 +196,6 @@ class note {
 
     const modalTriggers = document.querySelectorAll(".modal-trigge");
 
-    // Ajouter un écouteur d'événement pour fermer la modale
     modalTriggers.forEach((trigger) => {
       trigger.addEventListener("click", () => {
         modalContaine.parentNode.removeChild(modalContaine);
@@ -218,7 +204,7 @@ class note {
 
         parentElement.insertAdjacentHTML("afterbegin", newHTML);
 
-        actubtndetails(); // Réinitialiser les détails après la fermeture de la modale
+        actubtndetails();
       });
     });
   }
@@ -230,7 +216,7 @@ submit.addEventListener("submit", (e) => e.preventDefault());
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   togglemodal();
-  // radio = radio.filter((r) => r.checked);
+
   console.log(radio[0]);
   console.log(date.value);
 
