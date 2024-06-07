@@ -13,6 +13,70 @@
   </head>
 
   <body>
+    <!-- <div class="modal-containe">
+      <div class="overlay modal-trigge"></div>
+      <div
+        class="modal"
+        role="dialog"
+        aria-labelledby="modalTitle"
+        aria-describedby="dialogDesc"
+      >
+        <button aria-label="close modal" class="close-modal modal-trigge">
+          X
+        </button>
+        <form id="form">
+          <div class="prioriter">
+            <input
+              type="text"
+              placeholder="title"
+              id="title"
+              style="width: 100%; margin-bottom: 5px"
+              readonly
+            />
+            <textarea
+              name="desciption"
+              id="description"
+              cols="50%"
+              rows="8"
+              style="resize: none"
+              placeholder="Description"
+              readonly
+            ></textarea>
+          </div>
+
+          <div>
+            <div>
+              <label for="date">date: </label>
+              <input type="date" id="date" name="date" readonly />
+            </div>
+
+            <div class="mydict">
+              <div>
+                <p id="ip">importance :</p>
+                <label>
+                  <input
+                    type="radio"
+                    name="radio"
+                    checked=""
+                    class="rad"
+                    readonly
+                  />
+                  <span>LOW</span>
+                </label>
+                <label>
+                  <input type="radio" name="radio" class="rad" readonly />
+                  <span>MEDIUM</span>
+                </label>
+                <label>
+                  <input type="radio" name="radio" class="rad" readonly />
+                  <span>HIGHT</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div> -->
     <div class="modal-container">
       <div class="overlay modal-trigger"></div>
       <div
@@ -98,14 +162,13 @@
           <div class="ligne">
             <div class="left">
               <label class="containerr">
-                <input checked="checked" type="checkbox" />
-                <div class="checkmark"></div>
+                <input checked="checked" type="checkbox" />                <div class="checkmark"></div>
               </label>
             </div>
             <p class="para"></p>
 
             <div class="right">
-              <button id="details">details</button>
+              <button class="details">details</button>
               <input type="date" id="dat" class="date" readonly />
               <button class="deledit">
                 <img src="./image/editer.svg" alt="" width="15px" />
@@ -164,7 +227,7 @@
           </div>
           <p class="para"></p>
           <div class="right">
-            <button class="details">details</button>
+            <button class="details info">details</button>
             <input type="date" id="dat" class="date" readonly />
             <button class="deledit addbook modal-btn modal-trigger">
               <img src="./image/editer.svg" alt="" width="15px" />

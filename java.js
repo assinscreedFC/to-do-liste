@@ -1,13 +1,26 @@
 const modalContainer = document.querySelector(".modal-container");
-const modalTriggers = document.querySelectorAll(".modal-trigger");
+let modalTriggers = document.querySelectorAll(".modal-trigger");
 const titre = document.querySelector("#title");
 const description = document.querySelector("#description");
 const date = document.querySelector("#date");
 const radio = document.querySelectorAll(".rad");
 const section = document.querySelector(".grand-container");
+let details = document.querySelectorAll(".info");
+let anis = new Array();
 modalTriggers.forEach((trigger) =>
   trigger.addEventListener("click", () => togglemodal())
 );
+function actubtndetails() {
+  details = document.querySelectorAll(".info");
+
+  // modalTriggers = document.querySelectorAll(".modal-trigger");
+  details.forEach((Element, index) => {
+    console.log(Element + " " + index);
+    Element.addEventListener("click", () => {
+      anis[index].addbtn(Element);
+    });
+  });
+}
 
 class note {
   constructor(titre, desc, dateg, rad) {
@@ -18,6 +31,7 @@ class note {
     this.clone = document
       .querySelector("#modalTemplate")
       .content.cloneNode(true);
+    // this.btn;
   }
 
   setNote() {
@@ -25,7 +39,7 @@ class note {
     section.appendChild(newClone);
     const neww = section.lastElementChild;
     neww.querySelector(".para").innerHTML = this.Titre;
-    // neww.querySelector("#description").innerHTML = this.Description;
+    //neww.querySelector("#description").innerHTML = this.Description;
     neww.querySelector(".date").value = this.date;
     let couleur;
     if (radio[0].checked) {
@@ -43,80 +57,98 @@ class note {
     // neww.querySelector("#details").classList.add("modal-trigger");
     // neww.querySelector(".rad").innerHTML = this.rad;
     console.log(neww);
-
-    this.addbtn(neww);
+    // this.btn = neww.querySelector(".details");
+    // this.addbtn();
   }
 
-  addbtn(neww) {
-    const btn = neww.querySelector(".details");
-    console.log(btn);
-    btn.addEventListener("click", () => {
-      document.querySelector(
-        "body"
-      ).innerHTML += `<div class="modal-containe active">
-    <div class="overlay modal-trigge"></div>
-    <div
-      class="modal"
-      role="dialog"
-      aria-labelledby="modalTitle"
-      aria-describedby="dialogDesc"
-    >
-      <button aria-label="close modal" class="close-modal modal-trigge">
-        X
-      </button>
-      <form id="form">
-        <div class="prioriter">
-          <input
-            type="text"
-            placeholder="title"
-            id="title"
-            value="${this.Titre}"
-            style="width: 100%; margin-bottom: 5px"
-            readonly
-          />
-          <textarea
-            name="desciption"
-            id="description"
-            cols="50%"
-            rows="8"
-            value="${this.Description}"
-            style="resize: none"
-            placeholder="Description"
-            readonly
-          ></textarea>
-        </div>
+  addbtn(Element) {
+    const btn = Element;
 
-        <div>
-          <div>
-            <label for="date">date: </label>
-            <input type="date" id="date" name="date" value="${this.date}" readonly/>
+    document.querySelector(
+      "body"
+    ).innerHTML += `<div class="modal-containe active">
+      <div class="overlay modal-trigge"></div>
+      <div
+        class="modal"
+        role="dialog"
+        aria-labelledby="modalTitle"
+        aria-describedby="dialogDesc"
+      >
+        <button aria-label="close modal" class="close-modal modal-trigge">
+          X
+        </button>
+        <form id="form">
+          <div class="prioriter">
+            <input
+              type="text"
+              placeholder="title"
+              id="title"
+              
+              style="width: 100%; margin-bottom: 5px"
+              readonly
+            />
+            <textarea
+              name="desciption"
+              id="description"
+              cols="50%"
+              rows="8"
+              value="${this.Description}"
+              style="resize: none"
+              placeholder="Description"
+              readonly
+            ></textarea>
           </div>
 
-          <div class="mydict">
+          <div>
             <div>
-              <p id="ip">importance :</p>
-              <label>
-                <input type="radio" name="radio" checked="" class="rad" readonly/>
-                <span>LOW</span>
-              </label>
-              <label>
-                <input type="radio" name="radio" class="rad" readonly/>
-                <span>MEDIUM</span>
-              </label>
-              <label>
-                <input type="radio" name="radio" class="rad" readonly />
-                <span>HIGHT</span>
-              </label>
+              <label for="date">date: </label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value="${this.date}"
+                readonly
+              />
             </div>
-          </div>`;
-      const modalContaine = document.querySelector(".modal-containe");
-      const modalTrigger = document.querySelectorAll(".modal-trigge");
-      modalTrigger.forEach((trigger) =>
-        trigger.addEventListener("click", () =>
-          modalContaine.classList.toggle("active")
-        )
-      );
-    });
+
+            <div class="mydict">
+              <div>
+                <p id="ip">importance :</p>
+                <label>
+                  <input
+                    type="radio"
+                    name="radio"
+                    checked=""
+                    class="rad"
+                    readonly
+                  />
+                  <span>LOW</span>
+                </label>
+                <label>
+                  <input type="radio" name="radio" class="rad" readonly />
+                  <span>MEDIUM</span>
+                </label>
+                <label>
+                  <input type="radio" name="radio" class="rad" readonly />
+                  <span>HIGHT</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- <label for="check">reed</label>
+      <input type="checkbox" name="check" id="check" /> -->
+        </form>
+      </div>
+    </div>`;
+
+    const modalContaine = document.querySelector(".modal-containe");
+    const modalTrigger = document.querySelectorAll(".modal-trigge");
+    console.log(btn.target + "det");
+    modalTrigger.forEach((trigger) =>
+      trigger.addEventListener("click", () => {
+        modalContaine.remove();
+      })
+    );
   }
 }
 
@@ -129,8 +161,10 @@ form.addEventListener("submit", (e) => {
   // radio = radio.filter((r) => r.checked);
   console.log(radio[0]);
   console.log(date.value);
-  anis = new note(titre.value, description.value, date.value, radio);
-  anis.setNote();
+
+  anis.push(new note(titre.value, description.value, date.value, radio));
+  anis[anis.length - 1].setNote();
+  actubtndetails();
 });
 
 function togglemodal() {
