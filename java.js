@@ -231,6 +231,9 @@ form.addEventListener("submit", (e) => {
     console.log("Radio : " + note.rad[0].checked);
     console.log("---------------------");
   });
+  titre.value = "";
+  description.value = "";
+  date.value = "";
 });
 
 modalTriggers.forEach((trigger) =>
