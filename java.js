@@ -7,19 +7,34 @@ const radio = document.querySelectorAll(".rad");
 const section = document.querySelector(".grand-container");
 let details = document.querySelectorAll(".info");
 let anis = new Array();
-modalTriggers.forEach((trigger) =>
-  trigger.addEventListener("click", () => togglemodal())
-);
+
+function addEventListeners() {
+  details.forEach((Element, index) => {
+    Element.addEventListener("click", clickHandler);
+    Element.classList.add("listener-added");
+  });
+}
+
+function removeEventListeners() {
+  details.forEach((Element) => {
+    Element.removeEventListener("click", clickHandler);
+    Element.classList.remove("listener-added");
+  });
+}
+
+function clickHandler(event) {
+  const Element = event.currentTarget;
+  const index = Array.from(details).indexOf(Element);
+  console.log("Index du bouton cliqué : " + index);
+  anis[index].addbtn(Element);
+}
+
 function actubtndetails() {
   details = document.querySelectorAll(".info");
 
-  // modalTriggers = document.querySelectorAll(".modal-trigger");
-  details.forEach((Element, index) => {
-    console.log(Element + " " + index);
-    Element.addEventListener("click", () => {
-      anis[index].addbtn(Element);
-    });
-  });
+  removeEventListeners();
+
+  addEventListeners();
 }
 
 class note {
@@ -61,12 +76,9 @@ class note {
     // this.addbtn();
   }
 
-  addbtn(Element) {
-    const btn = Element;
-
-    document.querySelector(
-      "body"
-    ).innerHTML += `<div class="modal-containe active">
+  addbtn() {
+    const modalContaine = document.querySelector(".modal-containe");
+    modalContaine.innerHTML += `
       <div class="overlay modal-trigge"></div>
       <div
         class="modal"
@@ -83,7 +95,7 @@ class note {
               type="text"
               placeholder="title"
               id="title"
-              
+              value="${this.Titre}"
               style="width: 100%; margin-bottom: 5px"
               readonly
             />
@@ -139,16 +151,20 @@ class note {
       <input type="checkbox" name="check" id="check" /> -->
         </form>
       </div>
-    </div>`;
+    `;
+    modalContaine.classList.add("active");
+    actubtndetails();
 
-    const modalContaine = document.querySelector(".modal-containe");
-    const modalTrigger = document.querySelectorAll(".modal-trigge");
-    console.log(btn.target + "det");
-    modalTrigger.forEach((trigger) =>
+    const modalTriggers = document.querySelectorAll(".modal-trigge");
+
+    // Ajouter un écouteur d'événement pour fermer la modale
+    modalTriggers.forEach((trigger) => {
       trigger.addEventListener("click", () => {
-        modalContaine.remove();
-      })
-    );
+        modalContaine.parentNode.removeChild(modalContaine);
+
+        actubtndetails(); // Réinitialiser les détails après la fermeture de la modale
+      });
+    });
   }
 }
 
@@ -167,6 +183,9 @@ form.addEventListener("submit", (e) => {
   actubtndetails();
 });
 
+modalTriggers.forEach((trigger) =>
+  trigger.addEventListener("click", () => togglemodal())
+);
 function togglemodal() {
   modalContainer.classList.toggle("active");
 }
