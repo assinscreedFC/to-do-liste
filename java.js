@@ -26,7 +26,7 @@ function clickHandler(event) {
   const Element = event.currentTarget;
   const index = Array.from(details).indexOf(Element);
   console.log("Index du bouton cliqué : " + index);
-  anis[index].addbtn(Element);
+  anis[index].addbtn(index);
 }
 
 function actubtndetails() {
@@ -39,23 +39,62 @@ function actubtndetails() {
 
 class note {
   constructor(titre, desc, dateg, rad) {
-    this.Titre = titre;
-    this.Description = desc;
-    this.date = dateg;
-    this.rad = rad;
+    this._Titre = titre;
+    this._Description = desc;
+    this._date = dateg;
+    this._rad = rad;
     this.clone = document
       .querySelector("#modalTemplate")
       .content.cloneNode(true);
     // this.btn;
   }
 
+  get Titre() {
+    return this._Titre;
+  }
+
+  // Setter pour la propriété 'Titre'
+  set Titre(newTitre) {
+    this._Titre = newTitre;
+  }
+
+  // Getter pour la propriété 'Description'
+  get Description() {
+    return this._Description;
+  }
+
+  // Setter pour la propriété 'Description'
+  set Description(newDesc) {
+    this._Description = newDesc;
+  }
+
+  // Getter pour la propriété 'date'
+  get date() {
+    return this._date;
+  }
+
+  // Setter pour la propriété 'date'
+  set date(newDate) {
+    this._date = newDate;
+  }
+
+  // Getter pour la propriété 'rad'
+  get rad() {
+    return this._rad;
+  }
+
+  // Setter pour la propriété 'rad'
+  set rad(newRad) {
+    this._rad = newRad;
+  }
+
   setNote() {
     const newClone = this.clone.cloneNode(true);
     section.appendChild(newClone);
     const neww = section.lastElementChild;
-    neww.querySelector(".para").innerHTML = this.Titre;
+    neww.querySelector(".para").innerHTML = this._Titre;
     //neww.querySelector("#description").innerHTML = this.Description;
-    neww.querySelector(".date").value = this.date;
+    neww.querySelector(".date").value = this._date;
     let couleur;
     if (radio[0].checked) {
       couleur = "#00FF00";
@@ -76,7 +115,7 @@ class note {
     // this.addbtn();
   }
 
-  addbtn() {
+  addbtn(index) {
     const modalContaine = document.querySelector(".modal-containe");
     modalContaine.innerHTML += `
       <div class="overlay modal-trigge"></div>
@@ -95,20 +134,20 @@ class note {
               type="text"
               placeholder="title"
               id="title"
-              value="${this.Titre}"
+              value="${anis[index].Titre}"
               style="width: 100%; margin-bottom: 5px"
               readonly
             />
             <textarea
-              name="desciption"
+              name="description"
               id="description"
               cols="50%"
               rows="8"
-              value="${this.Description}"
+              
               style="resize: none"
               placeholder="Description"
               readonly
-            ></textarea>
+            >${anis[index].Description}</textarea>
           </div>
 
           <div>
@@ -130,18 +169,19 @@ class note {
                   <input
                     type="radio"
                     name="radio"
-                    checked=""
+                   
                     class="rad"
+                    id="low"
                     readonly
                   />
                   <span>LOW</span>
                 </label>
                 <label>
-                  <input type="radio" name="radio" class="rad" readonly />
+                  <input type="radio" name="radio" class="rad" id="med"  readonly />
                   <span>MEDIUM</span>
                 </label>
                 <label>
-                  <input type="radio" name="radio" class="rad" readonly />
+                  <input type="radio" name="radio" class="rad" id="hight"  readonly />
                   <span>HIGHT</span>
                 </label>
               </div>
@@ -152,6 +192,18 @@ class note {
         </form>
       </div>
     `;
+    const lowRadio = document.querySelector(`#low`);
+    const mediumRadio = document.querySelector(`#med`);
+    const highRadio = document.querySelector(`#hight`);
+
+    if (anis[index].rad[0].checked) {
+      lowRadio.checked = true;
+    } else if (anis[index].rad[1].checked) {
+      mediumRadio.checked = true;
+    } else {
+      highRadio.checked = true;
+    }
+
     modalContaine.classList.add("active");
     actubtndetails();
 
@@ -161,6 +213,10 @@ class note {
     modalTriggers.forEach((trigger) => {
       trigger.addEventListener("click", () => {
         modalContaine.parentNode.removeChild(modalContaine);
+        const parentElement = document.querySelector("body");
+        const newHTML = '<div class="modal-containe"></div>';
+
+        parentElement.insertAdjacentHTML("afterbegin", newHTML);
 
         actubtndetails(); // Réinitialiser les détails après la fermeture de la modale
       });
@@ -181,6 +237,14 @@ form.addEventListener("submit", (e) => {
   anis.push(new note(titre.value, description.value, date.value, radio));
   anis[anis.length - 1].setNote();
   actubtndetails();
+  console.log(description.value);
+  anis.forEach((note) => {
+    console.log("Titre : " + note.Titre);
+    console.log("Description : " + note.Description);
+    console.log("Date : " + note.date);
+    console.log("Radio : " + note.rad[0].checked);
+    console.log("---------------------");
+  });
 });
 
 modalTriggers.forEach((trigger) =>
