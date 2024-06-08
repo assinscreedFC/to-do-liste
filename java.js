@@ -48,6 +48,10 @@ class note {
       .content.cloneNode(true);
   }
 
+  static fromObject(obj) {
+    return new note(obj._Titre, obj._Description, obj._date, obj._rad);
+  }
+
   get Titre() {
     return this._Titre;
   }
@@ -88,14 +92,14 @@ class note {
 
     neww.querySelector(".date").value = this._date;
     let couleur;
-    if (radio[0].checked) {
+    if (this.rad[0]) {
       couleur = "#00FF00";
-    } else if (radio[1].checked) {
+    } else if (this.rad[1]) {
       couleur = "#FFA500";
     } else {
       couleur = "#FF0000";
     }
-    console.log(radio);
+
     const tri = neww.querySelector(".edit");
     tri.addEventListener("click", note.actunote);
 
@@ -185,9 +189,9 @@ class note {
     const mediumRadio = document.querySelector(`#med`);
     const highRadio = document.querySelector(`#hight`);
 
-    if (anis[index].rad[0].checked) {
+    if (anis[index].rad[0]) {
       lowRadio.checked = true;
-    } else if (anis[index].rad[1].checked) {
+    } else if (anis[index].rad[1]) {
       mediumRadio.checked = true;
     } else {
       highRadio.checked = true;
@@ -253,10 +257,12 @@ class note {
   }
 
   static deletnote() {
-    const dellet = section.querySelectorAll(".deledit");
-    dellet.forEach((tri) => {
+    let dellet = section.querySelectorAll(".deledit");
+    dellet.forEach((tri, index) => {
       tri.addEventListener("click", () => {
         tri.parentNode.parentNode.parentNode.remove();
+        anis.splice(index, 1);
+        localStorage.setItem("notes", JSON.stringify(anis));
       });
     });
   }
@@ -267,16 +273,25 @@ const submit = document.getElementById("add");
 submit.addEventListener("submit", (e) => e.preventDefault());
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  console.log(radio[0]);
+  let tabrad = [];
+  console.log(radio);
   console.log(date.value);
+  radio.forEach((e) => {
+    tabrad.push(e.checked);
+  });
+  console.log(tabrad);
+  const newNote = new note(titre.value, description.value, date.value, tabrad);
 
-  anis.push(new note(titre.value, description.value, date.value, radio));
-  anis[anis.length - 1].setNote();
+  let anis = JSON.parse(localStorage.getItem("notes")) || [];
+  anis.push(newNote);
+  localStorage.setItem("notes", JSON.stringify(anis));
+
+  newNote.setNote();
   actubtndetails();
   note.deletnote();
   togglemodal();
   note.actunote();
+
   nbr = 0;
   console.log(description.value);
   anis.forEach((note) => {
@@ -286,14 +301,26 @@ form.addEventListener("submit", (e) => {
     console.log("Radio : " + note.rad[0].checked);
     console.log("---------------------");
   });
-  titre.value = "";
-  description.value = "";
-  date.value = "";
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  let notes = JSON.parse(localStorage.getItem("notes")) || [];
+  notes = notes.map((noteObj) => note.fromObject(noteObj));
+  anis.push(...notes);
+  anis.forEach((note) => {
+    note.setNote();
+  });
+  note.actunote();
+  note.deletnote();
+  actubtndetails();
 });
 
 modalTriggers.forEach((trigger) =>
   trigger.addEventListener("click", () => togglemodal())
 );
 function togglemodal() {
+  titre.value = "";
+  description.value = "";
+  date.value = "";
   modalContainer.classList.toggle("active");
 }
