@@ -8,15 +8,15 @@ const section = document.querySelector(".grand-container");
 let details = document.querySelectorAll(".info");
 let anis = new Array();
 
-function addEventListeners() {
-  details.forEach((Element, index) => {
+function addEventListeners(nomm) {
+  nomm.forEach((Element, index) => {
     Element.addEventListener("click", clickHandler);
     Element.classList.add("listener-added");
   });
 }
 
-function removeEventListeners() {
-  details.forEach((Element) => {
+function removeEventListeners(nomm) {
+  nomm.forEach((Element) => {
     Element.removeEventListener("click", clickHandler);
     Element.classList.remove("listener-added");
   });
@@ -32,9 +32,9 @@ function clickHandler(event) {
 function actubtndetails() {
   details = document.querySelectorAll(".info");
 
-  removeEventListeners();
+  removeEventListeners(details);
 
-  addEventListeners();
+  addEventListeners(details);
 }
 
 class note {
@@ -96,6 +96,8 @@ class note {
       couleur = "#FF0000";
     }
     console.log(radio);
+    const tri = neww.querySelector(".edit");
+    tri.addEventListener("click", note.actunote);
 
     neww.querySelector(".ligne").style.borderLeft = " 4px solid " + couleur;
 
@@ -208,21 +210,39 @@ class note {
       });
     });
   }
-}
-function deletnote() {
-  const dellet = section.querySelectorAll(".deledit");
-  dellet.forEach((tri) => {
-    tri.addEventListener("click", (tri) => {
-      tri.parentNode.parentNode.parentNode.remove();
+  static actunote(this) {
+    // Fonction pour gérer le clic sur un élément .edit
+
+    
+    togglemodal();
+    console.log(index);
+
+    let _titre = document.querySelector("#title");
+    let _description = document.querySelector("#description");
+    let _date = document.querySelector("#date");
+
+    _titre.value = anis[index].Titre;
+    _description.value = anis[index].Description;
+    _date.value = anis[index].date;
+
+    // Ajouter un seul écouteur d'événements click à chaque élément
+  }
+
+  static deletnote() {
+    const dellet = section.querySelectorAll(".deledit");
+    dellet.forEach((tri) => {
+      tri.addEventListener("click", () => {
+        tri.parentNode.parentNode.parentNode.remove();
+      });
     });
-  });
+  }
 }
+
 const form = document.getElementById("form");
 const submit = document.getElementById("add");
 submit.addEventListener("submit", (e) => e.preventDefault());
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  togglemodal();
 
   console.log(radio[0]);
   console.log(date.value);
@@ -230,7 +250,8 @@ form.addEventListener("submit", (e) => {
   anis.push(new note(titre.value, description.value, date.value, radio));
   anis[anis.length - 1].setNote();
   actubtndetails();
-  deletnote();
+  note.deletnote();
+  togglemodal();
 
   console.log(description.value);
   anis.forEach((note) => {
@@ -240,14 +261,16 @@ form.addEventListener("submit", (e) => {
     console.log("Radio : " + note.rad[0].checked);
     console.log("---------------------");
   });
-  titre.value = "";
-  description.value = "";
-  date.value = "";
+
+  note.actunote();
 });
 
 modalTriggers.forEach((trigger) =>
   trigger.addEventListener("click", () => togglemodal())
 );
 function togglemodal() {
+  // titre.value = "";
+  // description.value = "";
+  // date.value = "";
   modalContainer.classList.toggle("active");
 }
