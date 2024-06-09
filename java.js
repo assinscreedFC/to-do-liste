@@ -197,20 +197,24 @@ class note {
       highRadio.checked = true;
     }
 
-    modalContaine.classList.add("active");
+    setTimeout(() => {
+      modalContaine.classList.add("active");
+    }, 50); // 1000 millisecondes = 1 seconde
     actubtndetails();
 
     const modalTriggers = document.querySelectorAll(".modal-trigge");
 
     modalTriggers.forEach((trigger) => {
       trigger.addEventListener("click", () => {
-        modalContaine.parentNode.removeChild(modalContaine);
-        const parentElement = document.querySelector("body");
-        const newHTML = '<div class="modal-containe"></div>';
+        setTimeout(() => {
+          modalContaine.parentNode.removeChild(modalContaine);
+          const parentElement = document.querySelector("body");
+          const newHTML = '<div class="modal-containe"></div>';
+          actubtndetails();
+          parentElement.insertAdjacentHTML("afterbegin", newHTML);
+        }, 500); // 1000 millisecondes = 1 seconde
 
-        parentElement.insertAdjacentHTML("afterbegin", newHTML);
-
-        actubtndetails();
+        modalContaine.classList.remove("active");
       });
     });
   }
@@ -260,7 +264,10 @@ class note {
     let dellet = section.querySelectorAll(".deledit");
     dellet.forEach((tri, index) => {
       tri.addEventListener("click", () => {
-        tri.parentNode.parentNode.parentNode.remove();
+        const parenttri = tri.parentNode.parentNode.parentNode;
+        gsap.to(parenttri, { y: 200 });
+
+        parenttri.remove();
         anis.splice(index, 1);
         localStorage.setItem("notes", JSON.stringify(anis));
       });
