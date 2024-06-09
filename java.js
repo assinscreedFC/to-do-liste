@@ -265,11 +265,19 @@ class note {
     dellet.forEach((tri, index) => {
       tri.addEventListener("click", () => {
         const parenttri = tri.parentNode.parentNode.parentNode;
-        gsap.to(parenttri, { y: 200 });
+        gsap.to(parenttri, {
+          x: 620,
+          duration: 2,
+          ease: "power3.out",
+          opacity: 0,
+          onComplete: () => {
+            parenttri.remove();
 
-        parenttri.remove();
-        anis.splice(index, 1);
-        localStorage.setItem("notes", JSON.stringify(anis));
+            anis.splice(index, 1);
+
+            localStorage.setItem("notes", JSON.stringify(anis));
+          },
+        });
       });
     });
   }

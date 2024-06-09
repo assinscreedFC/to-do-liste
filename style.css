@@ -136,10 +136,7 @@ input{
 
 }
 
-.grand-container{
-  overflow-y:auto;
-  padding: 10px 0;
-}
+
 
 /* Hide the default checkbox */
 .containerr input {
@@ -217,7 +214,11 @@ section{
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y:auto;
+  padding: 24px 32px;
+  overflow-x: hidden;
 }
+
 
 nav {
   background-color: #333;
