@@ -218,6 +218,12 @@ class note {
       });
     });
   }
+  static modify(index, ti, de, da, rad) {
+    anis[index].Titre = ti;
+    anis[index].Description = de;
+    anis[index].date = da;
+    anis[index].rad = rad;
+  }
 
   static actunote() {
     function setupEventListeners() {
@@ -252,6 +258,16 @@ class note {
         _description.value = anis[index].Description;
         _date.value = anis[index].date;
 
+        let modifier = document.querySelector("#add");
+        modifier.style.display = "none";
+
+        note.modify(
+          index,
+          _titre.value,
+          _description.value,
+          _date.value,
+          anis[index].rad
+        );
         nbr++;
         console.log(nbr);
       }
@@ -292,30 +308,84 @@ class note {
     }
   }
 }
+dis();
+function dis() {
+  const mod = document.getElementById("addd");
+  mod.addEventListener("click", () => {
+    const modd = document.getElementById("mod");
+    if (!modalContainer.classList.contains("active"))
+      modd.style.display = "none";
+
+    const moddi = document.getElementById("add");
+    if (!modalContainer.classList.contains("active"))
+      moddi.style.display = "inline-block";
+  });
+  const addNote = document.getElementById("add");
+  addNote.addEventListener("click", () => {
+    const modd = document.getElementById("mod");
+    if (!modalContainer.classList.contains("active"))
+      modd.style.display = "inline-block";
+
+    const moddi = document.getElementById("add");
+    if (!modalContainer.classList.contains("active"))
+      moddi.style.display = "none";
+  });
+  const edi = document.querySelectorAll(".edit");
+  edi.forEach((e) => {
+    e.addEventListener("click", () => {
+      const modd = document.getElementById("mod");
+      if (!modalContainer.classList.contains("active"))
+        modd.style.display = "inline-block";
+
+      const moddi = document.getElementById("add");
+      if (!modalContainer.classList.contains("active"))
+        moddi.style.display = "none";
+    });
+  });
+}
+
 let nbr = 0;
 const form = document.getElementById("form");
+
 const submit = document.getElementById("add");
 submit.addEventListener("submit", (e) => e.preventDefault());
+
+const submitd = document.getElementById("mod");
+submitd.addEventListener("submit", (e) => e.preventDefault());
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   let tabrad = [];
   console.log(radio);
   console.log(date.value);
+
   radio.forEach((e) => {
     tabrad.push(e.checked);
   });
+  const mod = document.querySelector("#mod");
+  console.log(mod.style.display);
 
-  const newNote = new note(titre.value, description.value, date.value, tabrad);
+  if (mod.style.display === "none") {
+    const newNote = new note(
+      titre.value,
+      description.value,
+      date.value,
+      tabrad
+    );
 
-  let anis = JSON.parse(localStorage.getItem("notes")) || [];
-  anis.push(newNote);
-  localStorage.setItem("notes", JSON.stringify(anis));
+    let anis = JSON.parse(localStorage.getItem("notes")) || [];
+    anis.push(newNote);
+    localStorage.setItem("notes", JSON.stringify(anis));
 
-  newNote.setNote();
-  actubtndetails();
-  note.deletnote();
+    newNote.setNote();
+    actubtndetails();
+    note.actunote();
+    note.deletnote();
+  } else {
+    note.modify(index, titre.value, description.value, date.value, tabrad);
+  }
+
   togglemodal();
-  note.actunote();
 
   nbr = 0;
   console.log(description.value);

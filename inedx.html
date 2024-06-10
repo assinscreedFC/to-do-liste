@@ -97,6 +97,7 @@
               placeholder="title"
               id="title"
               style="width: 100%; margin-bottom: 5px"
+              required
             />
             <textarea
               name="description"
@@ -133,6 +134,7 @@
             </div>
             <div class="splite">
               <button id="add" class="details">Add Note</button>
+              <button id="mod" class="details">modify Note</button>
             </div>
           </div>
           <!-- <label for="check">reed</label>
@@ -154,7 +156,10 @@
         </ul>
 
         <div class="add">
-          <button class="details addbtn addbook modal-btn modal-trigger">
+          <button
+            id="addd"
+            class="details addbtn addbook modal-btn modal-trigger"
+          >
             ADD
           </button>
         </div>
