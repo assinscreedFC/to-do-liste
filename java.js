@@ -84,7 +84,7 @@ class note {
     this._rad = newRad;
   }
 
-  setNote() {
+  async setNote() {
     const newClone = this.clone.cloneNode(true);
     section.appendChild(newClone);
     const neww = section.lastElementChild;
@@ -100,12 +100,13 @@ class note {
       couleur = "#FF0000";
     }
 
-    const tri = neww.querySelector(".edit");
-    tri.addEventListener("click", note.actunote);
+    // const tri = neww.querySelector(".edit");
+    // tri.addEventListener("click", note.actunote);
 
     neww.querySelector(".ligne").style.borderLeft = " 4px solid " + couleur;
 
     console.log(neww);
+    return Promise.resolve();
   }
 
   addbtn(index) {
@@ -218,11 +219,11 @@ class note {
       });
     });
   }
-  static modify(index, ti, de, da, rad) {
+  static async modify(index, ti, de, da) {
     anis[index].Titre = ti;
     anis[index].Description = de;
     anis[index].date = da;
-    anis[index].rad = rad;
+    // anis[index].rad = rad;
   }
 
   static actunote() {
@@ -236,7 +237,7 @@ class note {
       });
 
       editButtons.forEach((button) => {
-        button.addEventListener("click", handleEditClick, { once: true });
+        button.addEventListener("click", handleEditClick);
         console.log("Added click event listener to button");
       });
     }
@@ -247,8 +248,18 @@ class note {
         const index = Array.from(document.querySelectorAll(".edit")).indexOf(
           button
         );
+        // anis = JSON.parse(localStorage.getItem("notes")) || [];
+
         console.log("Index du bouton cliqué : " + index);
         togglemodal();
+
+        const modd = document.getElementById("mod");
+        if (modalContainer.classList.contains("active"))
+          modd.style.display = "inline-block";
+
+        const moddi = document.getElementById("add");
+        if (modalContainer.classList.contains("active"))
+          moddi.style.display = "none";
 
         let _titre = document.querySelector("#title");
         let _description = document.querySelector("#description");
@@ -258,16 +269,19 @@ class note {
         _description.value = anis[index].Description;
         _date.value = anis[index].date;
 
-        let modifier = document.querySelector("#add");
-        modifier.style.display = "none";
+        modd.addEventListener("click", async () => {
+          await note.modify(
+            index,
+            _titre.value,
+            _description.value,
+            _date.value
+          );
+          localStorage.setItem("notes", JSON.stringify(anis));
+        });
 
-        note.modify(
-          index,
-          _titre.value,
-          _description.value,
-          _date.value,
-          anis[index].rad
-        );
+        // let modifier = document.querySelector("#add");
+        // modifier.style.display = "none";
+
         nbr++;
         console.log(nbr);
       }
@@ -279,19 +293,22 @@ class note {
   static deletnote() {
     const dellet = section.querySelectorAll(".deledit");
 
-    dellet.forEach((tri, index) => {
+    dellet.forEach((tri) => {
       tri.removeEventListener("click", tri._clickHandler);
     });
 
-    dellet.forEach((tri, index) => {
-      const clickHandler = () => handleDelete(tri, index);
+    dellet.forEach((tri) => {
+      const clickHandler = () => handleDelete(tri);
       tri._clickHandler = clickHandler;
       tri.addEventListener("click", clickHandler);
     });
 
-    function handleDelete(tri, index) {
-      anis.splice(index, 1);
-      localStorage.setItem("notes", JSON.stringify(anis));
+    function handleDelete(tri) {
+      const index = Array.from(document.querySelectorAll(".edit")).indexOf(tri);
+      let aniss = JSON.parse(localStorage.getItem("notes")) || [];
+
+      aniss.splice(index, 1);
+      localStorage.setItem("notes", JSON.stringify(aniss));
 
       const parenttri = tri.parentNode.parentNode;
       gsap.to(parenttri, {
@@ -303,10 +320,24 @@ class note {
           parenttri.parentNode.remove();
         },
       });
+
       console.log(index);
-      console.log(anis);
+      console.log(aniss);
     }
   }
+  //   static act() {
+  //     const edi = document.querySelectorAll(".edit");
+
+  //     edi.forEach((e) => {
+  //       e.removeEventListener("click", handel);
+  //     });
+
+  //     edi.forEach((e) => {
+  //       e.addEventListener("click", handel);
+  //     });
+
+  //     function handel() {}
+  //   }
 }
 dis();
 function dis() {
@@ -330,18 +361,6 @@ function dis() {
     if (!modalContainer.classList.contains("active"))
       moddi.style.display = "none";
   });
-  const edi = document.querySelectorAll(".edit");
-  edi.forEach((e) => {
-    e.addEventListener("click", () => {
-      const modd = document.getElementById("mod");
-      if (!modalContainer.classList.contains("active"))
-        modd.style.display = "inline-block";
-
-      const moddi = document.getElementById("add");
-      if (!modalContainer.classList.contains("active"))
-        moddi.style.display = "none";
-    });
-  });
 }
 
 let nbr = 0;
@@ -350,10 +369,10 @@ const form = document.getElementById("form");
 const submit = document.getElementById("add");
 submit.addEventListener("submit", (e) => e.preventDefault());
 
-const submitd = document.getElementById("mod");
-submitd.addEventListener("submit", (e) => e.preventDefault());
+// const submitd = document.getElementById("mod");
+// submitd.addEventListener("submit", (e) => e.preventDefault());
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   let tabrad = [];
   console.log(radio);
@@ -364,7 +383,6 @@ form.addEventListener("submit", (e) => {
   });
   const mod = document.querySelector("#mod");
   console.log(mod.style.display);
-
   if (mod.style.display === "none") {
     const newNote = new note(
       titre.value,
@@ -373,19 +391,17 @@ form.addEventListener("submit", (e) => {
       tabrad
     );
 
-    let anis = JSON.parse(localStorage.getItem("notes")) || [];
+    anis = JSON.parse(localStorage.getItem("notes")) || [];
     anis.push(newNote);
     localStorage.setItem("notes", JSON.stringify(anis));
 
-    newNote.setNote();
-    actubtndetails();
+    await newNote.setNote();
     note.actunote();
+    actubtndetails();
     note.deletnote();
-  } else {
-    note.modify(index, titre.value, description.value, date.value, tabrad);
   }
-
   togglemodal();
+  setTimeout(() => {}, 1000);
 
   nbr = 0;
   console.log(description.value);
@@ -417,5 +433,7 @@ function togglemodal() {
   titre.value = "";
   description.value = "";
   date.value = "";
+
   modalContainer.classList.toggle("active");
+  if (!modalContainer.classList.contains("active")) nbr = 0;
 }
