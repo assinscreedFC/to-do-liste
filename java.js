@@ -261,25 +261,35 @@ class note {
   }
 
   static deletnote() {
-    let dellet = section.querySelectorAll(".deledit");
+    const dellet = section.querySelectorAll(".deledit");
+
     dellet.forEach((tri, index) => {
-      tri.addEventListener("click", () => {
-        const parenttri = tri.parentNode.parentNode.parentNode;
-        gsap.to(parenttri, {
-          x: 620,
-          duration: 2,
-          ease: "power3.out",
-          opacity: 0,
-          onComplete: () => {
-            parenttri.remove();
-
-            anis.splice(index, 1);
-
-            localStorage.setItem("notes", JSON.stringify(anis));
-          },
-        });
-      });
+      tri.removeEventListener("click", tri._clickHandler);
     });
+
+    dellet.forEach((tri, index) => {
+      const clickHandler = () => handleDelete(tri, index);
+      tri._clickHandler = clickHandler;
+      tri.addEventListener("click", clickHandler);
+    });
+
+    function handleDelete(tri, index) {
+      anis.splice(index, 1);
+      localStorage.setItem("notes", JSON.stringify(anis));
+
+      const parenttri = tri.parentNode.parentNode;
+      gsap.to(parenttri, {
+        x: 600,
+        duration: 2,
+        ease: "power3.out",
+        opacity: 0,
+        onComplete: () => {
+          parenttri.parentNode.remove();
+        },
+      });
+      console.log(index);
+      console.log(anis);
+    }
   }
 }
 let nbr = 0;
@@ -294,7 +304,7 @@ form.addEventListener("submit", (e) => {
   radio.forEach((e) => {
     tabrad.push(e.checked);
   });
-  console.log(tabrad);
+
   const newNote = new note(titre.value, description.value, date.value, tabrad);
 
   let anis = JSON.parse(localStorage.getItem("notes")) || [];
@@ -313,7 +323,7 @@ form.addEventListener("submit", (e) => {
     console.log("Titre : " + note.Titre);
     console.log("Description : " + note.Description);
     console.log("Date : " + note.date);
-    console.log("Radio : " + note.rad[0].checked);
+    // console.log("Radio : " + note.rad[0].checked);
     console.log("---------------------");
   });
 });
