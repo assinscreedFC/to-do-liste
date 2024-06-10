@@ -11,7 +11,7 @@ Une application de liste de tâches simple réalisée dans le cadre de mon appre
 
 ## Démo
 
-Vous pouvez consulter une démo live de l'application [ici](https://assinscreedfc.github.io/to-do-liste/).
+Vous pouvez consulter une démo live de l'application [ici](https://assinscreedfc.github.io/to-do-liste/inedx.html).
 
 ## Installation
 
