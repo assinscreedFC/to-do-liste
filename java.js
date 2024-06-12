@@ -38,18 +38,25 @@ function actubtndetails() {
 }
 
 class note {
-  constructor(titre, desc, dateg, rad) {
+  constructor(titre, desc, dateg, rad, chekedd) {
     this._Titre = titre;
     this._Description = desc;
     this._date = dateg;
     this._rad = rad;
+    this._chekedd = chekedd;
     this.clone = document
       .querySelector("#modalTemplate")
       .content.cloneNode(true);
   }
 
   static fromObject(obj) {
-    return new note(obj._Titre, obj._Description, obj._date, obj._rad);
+    return new note(
+      obj._Titre,
+      obj._Description,
+      obj._date,
+      obj._rad,
+      obj._chekedd
+    );
   }
 
   get Titre() {
@@ -84,26 +91,39 @@ class note {
     this._rad = newRad;
   }
 
-  async setNote() {
+  get chekedd() {
+    return this._chekedd;
+  }
+  set chekedd(newchek) {
+    this._chekedd = newchek;
+  }
+  static couleurNote(parent, rad) {
+    let couleur;
+    if (rad[0]) {
+      couleur = "#00FF00";
+    } else if (rad[1]) {
+      couleur = "#FFA500";
+    } else {
+      couleur = "#FF0000";
+    }
+
+    parent.querySelector(".ligne").style.borderLeft = " 4px solid " + couleur;
+  }
+
+  async setNote(index) {
     const newClone = this.clone.cloneNode(true);
     section.appendChild(newClone);
     const neww = section.lastElementChild;
     neww.querySelector(".para").innerHTML = this._Titre;
 
     neww.querySelector(".date").value = this._date;
-    let couleur;
-    if (this.rad[0]) {
-      couleur = "#00FF00";
-    } else if (this.rad[1]) {
-      couleur = "#FFA500";
-    } else {
-      couleur = "#FF0000";
-    }
-
-    // const tri = neww.querySelector(".edit");
-    // tri.addEventListener("click", note.actunote);
-
-    neww.querySelector(".ligne").style.borderLeft = " 4px solid " + couleur;
+    note.couleurNote(neww, this.rad);
+    let doo = neww.querySelector(".do");
+    doo.checked = this._chekedd;
+    doo.addEventListener("click", () => {
+      anis[index].chekedd = doo.checked;
+      localStorage.setItem("notes", JSON.stringify(anis));
+    });
 
     console.log(neww);
     return Promise.resolve();
@@ -200,7 +220,7 @@ class note {
 
     setTimeout(() => {
       modalContaine.classList.add("active");
-    }, 50); // 1000 millisecondes = 1 seconde
+    }, 50);
     actubtndetails();
 
     const modalTriggers = document.querySelectorAll(".modal-trigge");
@@ -219,11 +239,11 @@ class note {
       });
     });
   }
-  static async modify(index, ti, de, da) {
+  static async modify(index, ti, de, da, rad) {
     anis[index].Titre = ti;
     anis[index].Description = de;
     anis[index].date = da;
-    // anis[index].rad = rad;
+    anis[index].rad = rad;
   }
 
   static actunote() {
@@ -244,38 +264,52 @@ class note {
 
     function handleEditClick(event) {
       if (nbr === 0) {
+        const modd = document.getElementById("mod");
+        const moddi = document.getElementById("add");
         const button = event.currentTarget;
         const index = Array.from(document.querySelectorAll(".edit")).indexOf(
           button
         );
-        // anis = JSON.parse(localStorage.getItem("notes")) || [];
+        let parent = button.parentNode.parentNode.parentNode;
+        let tabrad = [];
+        let _titre = document.querySelector("#title");
+        let _description = document.querySelector("#description");
+        let _date = document.querySelector("#date");
 
         console.log("Index du bouton cliqué : " + index);
         togglemodal();
 
-        const modd = document.getElementById("mod");
         if (modalContainer.classList.contains("active"))
           modd.style.display = "inline-block";
 
-        const moddi = document.getElementById("add");
         if (modalContainer.classList.contains("active"))
           moddi.style.display = "none";
 
-        let _titre = document.querySelector("#title");
-        let _description = document.querySelector("#description");
-        let _date = document.querySelector("#date");
+        const inrad = document.querySelectorAll(".rad");
+        inrad.forEach((e, indexs) => {
+          if (anis[index].rad[indexs] === true) {
+            e.checked = true;
+          }
+        });
 
         _titre.value = anis[index].Titre;
         _description.value = anis[index].Description;
         _date.value = anis[index].date;
 
         modd.addEventListener("click", async () => {
+          radio.forEach((e) => {
+            tabrad.push(e.checked);
+          });
           await note.modify(
             index,
             _titre.value,
             _description.value,
-            _date.value
+            _date.value,
+            tabrad
           );
+          note.couleurNote(parent, anis[index].rad);
+          parent.querySelector(".para").innerHTML = anis[index].Titre;
+
           localStorage.setItem("notes", JSON.stringify(anis));
         });
 
@@ -388,14 +422,15 @@ form.addEventListener("submit", async (e) => {
       titre.value,
       description.value,
       date.value,
-      tabrad
+      tabrad,
+      false
     );
 
     anis = JSON.parse(localStorage.getItem("notes")) || [];
     anis.push(newNote);
     localStorage.setItem("notes", JSON.stringify(anis));
 
-    await newNote.setNote();
+    await newNote.setNote(anis.length - 1);
     note.actunote();
     actubtndetails();
     note.deletnote();
