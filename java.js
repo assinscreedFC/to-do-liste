@@ -309,7 +309,7 @@ class note {
           );
           note.couleurNote(parent, anis[index].rad);
           parent.querySelector(".para").innerHTML = anis[index].Titre;
-
+          parent.querySelector(".date").value = _date.value;
           localStorage.setItem("notes", JSON.stringify(anis));
         });
 
