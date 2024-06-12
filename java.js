@@ -9,7 +9,7 @@ let details = document.querySelectorAll(".info");
 let anis = new Array();
 
 function addEventListeners(nomm) {
-  nomm.forEach((Element, index) => {
+  nomm.forEach((Element) => {
     Element.addEventListener("click", clickHandler);
     Element.classList.add("listener-added");
   });
